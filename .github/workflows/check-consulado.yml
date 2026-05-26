@@ -2,7 +2,12 @@ name: Check Consulado Peru Madrid appointments
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    # Madrid 08:00-22:30, cada 30 minutos
+    - cron: "0,30 6-20 * * *"
+
+    # Madrid 23:00-07:00, cada hora
+    - cron: "0 21-23,0-5 * * *"
+
   workflow_dispatch:
 
 jobs:
