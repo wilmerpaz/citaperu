@@ -1,0 +1,36 @@
+name: Check Consulado Peru Madrid appointments
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Check appointments
+        run: npm run check
+        env:
+          SMTP_HOST: smtp.gmail.com
+          SMTP_PORT: "465"
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          NOTIFY_TO: ${{ secrets.NOTIFY_TO }}
+          MAIL_FROM: ${{ secrets.SMTP_USER }}
