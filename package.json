@@ -1,0 +1,13 @@
+{
+  "name": "monitor-citas-consulado-peru",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node monitor.js"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.16",
+    "playwright": "^1.49.1"
+  }
+}
