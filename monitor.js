@@ -94,6 +94,36 @@ const checkedAt = new Date();
 const state = await checkAvailability();
 
 console.log(JSON.stringify({ checkedAt: checkedAt.toISOString(), ...state }, null, 2));
+if (state.hasUnavailableText || state.visibleReload || !state.hasBookingFlow) {
+  console.log("No notification sent: appointment booking is not clearly available.");
+  process.exit(0);
+}
+
+const madridTime = new Intl.DateTimeFormat("es-ES", {
+  dateStyle: "full",
+  timeStyle: "medium",
+  timeZone: "Europe/Madrid"
+}).format(checkedAt);
+
+await sendEmail({
+  subject: "Citas posiblemente disponibles - Consulado Peru Madrid",
+  text: [
+    "Las citas del Consulado de Peru en Madrid parecen estar disponibles.",
+    "",
+    `Fecha/hora de comprobacion: ${madridTime}`,
+    `URL: ${URL}`,
+    "",
+    "Senales detectadas:",
+    `- Titulo: ${state.title}`,
+    `- Flujo de reserva visible: ${state.hasBookingFlow ? "si" : "no"}`,
+    `- Mensaje de no disponibilidad: ${state.hasUnavailableText ? "si" : "no"}`,
+    `- Boton Reload visible: ${state.visibleReload ? "si" : "no"}`,
+    "",
+    "Abre la pagina cuanto antes para intentar reservar."
+  ].join("\n")
+});
+
+console.log("Notification sent.");
 
 if (state.hasUnavailableText || state.visibleReload || !state.hasBookingFlow) {
   console.log("No notification sent: appointment booking is not clearly available.");
