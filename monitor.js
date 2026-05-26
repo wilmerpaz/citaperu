@@ -96,4 +96,6 @@ const state = await checkAvailability();
 console.log(JSON.stringify({ checkedAt: checkedAt.toISOString(), ...state }, null, 2));
 
 if (state.hasUnavailableText || state.visibleReload || !state.hasBookingFlow) {
-  console.log("No noti
+  console.log("No notification sent: appointment booking is not clearly available.");
+  process.exit(0);
+}
